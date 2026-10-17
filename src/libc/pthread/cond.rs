@@ -61,7 +61,7 @@ pub fn pthread_cond_init(
     cond: MutPtr<pthread_cond_t>,
     attr: ConstPtr<pthread_condattr_t>,
 ) -> i32 {
-    assert!(attr.is_null());
+    // assert!(attr.is_null());
     let opaque = pthread_cond_t {
         magic: MAGIC_COND,
         _unused: [0; 6],
