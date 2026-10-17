@@ -782,7 +782,10 @@ impl GLES for GLES1OnGL2<'_> {
         // We allow Float parameters, as older GLES 1.1 games often request them via GetIntegerv.
         let allowed_float = type_ == ParamType::Float;
         if allowed_float {
-            log_dbg!("[GLES1-on-GL2] GetIntegerv called for float parameter: {:#X}", pname);
+            log_dbg!(
+                "[GLES1-on-GL2] GetIntegerv called for float parameter: {:#X}",
+                pname
+            );
         }
         assert!(type_ == ParamType::Int || allowed_float);
         gl21::GetIntegerv(pname, params);
