@@ -262,7 +262,7 @@ pub fn pthread_cond_destroy(env: &mut Environment, cond: MutPtr<pthread_cond_t>)
 }
 
 pub fn pthread_condattr_init(_env: &mut Environment, _attr: MutPtr<pthread_condattr_t>) -> i32 {
-    // Stub: condattr is not supported, 
+    // Stub: condattr is not supported,
     // but we return success to satisfy the caller
     0
 }
