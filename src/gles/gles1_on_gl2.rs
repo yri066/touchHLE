@@ -779,7 +779,8 @@ impl GLES for GLES1OnGL2<'_> {
     unsafe fn GetIntegerv(&mut self, pname: GLenum, params: *mut GLint) {
         let (type_, _count) = GET_PARAMS.get_type_info(pname);
         // TODO: type conversion
-        // We allow Float parameters, as older GLES 1.1 games often request them via GetIntegerv.
+        // We allow Float parameters, as older GLES 1.1
+        // games often request them via GetIntegerv
         let allowed_float = type_ == ParamType::Float;
         if allowed_float {
             log_dbg!(
