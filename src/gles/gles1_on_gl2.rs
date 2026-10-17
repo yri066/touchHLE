@@ -2160,4 +2160,17 @@ impl GLES for GLES1OnGL2<'_> {
     unsafe fn UnmapBufferOES(&mut self, target: GLenum) -> GLboolean {
         gl21::UnmapBuffer(target)
     }
+    // OES_vertex_array_object
+    unsafe fn BindVertexArrayOES(&mut self, _array: GLuint) {
+        // Stub: VAOs are an optimization, not strictly required for GLES 1.1 correctness
+    }
+    unsafe fn GenVertexArraysOES(&mut self, _n: GLsizei, _arrays: *mut GLuint) {
+        // Stub
+    }
+    unsafe fn DeleteVertexArraysOES(&mut self, _n: GLsizei, _arrays: *const GLuint) {
+        // Stub
+    }
+    unsafe fn IsVertexArrayOES(&mut self, _array: GLuint) -> GLboolean {
+        0 // GL_FALSE
+    }
 }

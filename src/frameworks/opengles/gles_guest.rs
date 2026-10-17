@@ -1471,6 +1471,44 @@ unsafe fn restore_fog_state_values(gles: &mut dyn GLES, from_backup: Option<(f32
     }
 }
 
+fn glBindVertexArrayOES(env: &mut Environment, array: GLuint) {
+    with_ctx_and_mem(env, |gles, _mem| unsafe {
+        gles.BindVertexArrayOES(array);
+    })
+}
+
+fn glGenVertexArraysOES(env: &mut Environment, n: GLsizei, arrays: ConstPtr<GLuint>) {
+    with_ctx_and_mem(env, |gles, mem| unsafe {
+        let arrays = if arrays.is_null() {
+            std::ptr::null()
+        } else {
+            mem.ptr_at(
+                arrays.cast::<u8>(),
+                (n as usize) * std::mem::size_of::<GLuint>(),
+            )
+            .cast()
+        };
+        gles.GenVertexArraysOES(n, arrays);
+    })
+}
+fn glDeleteVertexArraysOES(env: &mut Environment, n: GLsizei, arrays: ConstPtr<GLuint>) {
+    with_ctx_and_mem(env, |gles, mem| unsafe {
+        let arrays = if arrays.is_null() {
+            std::ptr::null()
+        } else {
+            mem.ptr_at(
+                arrays.cast::<u8>(),
+                (n as usize) * std::mem::size_of::<GLuint>(),
+            )
+            .cast()
+        };
+        gles.DeleteVertexArraysOES(n, arrays);
+    })
+}
+fn glIsVertexArrayOES(env: &mut Environment, array: GLuint) -> GLboolean {
+    with_ctx_and_mem(env, |gles, _mem| unsafe { gles.IsVertexArrayOES(array) })
+}
+
 pub const FUNCTIONS: FunctionExports = &[
     // Generic state manipulation
     export_c_func!(glGetError()),
@@ -1634,6 +1672,11 @@ pub const FUNCTIONS: FunctionExports = &[
     export_c_func!(glGetBufferParameteriv(_, _, _)),
     export_c_func!(glMapBufferOES(_, _)),
     export_c_func!(glUnmapBufferOES(_)),
+    // OES_vertex_array_object
+    export_c_func!(glBindVertexArrayOES(_)),
+    export_c_func!(glGenVertexArraysOES(_, _)),
+    export_c_func!(glDeleteVertexArraysOES(_, _)),
+    export_c_func!(glIsVertexArrayOES(_)),
 ];
 
 fn _get_currently_bound_buffer_object_name(env: &mut Environment, target: GLenum) -> GLuint {
