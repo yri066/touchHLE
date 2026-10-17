@@ -22,9 +22,7 @@ const NEWLINE_CHARACTERS: [char; 7] = [
     '\u{000A}', '\u{000B}', '\u{000C}', '\u{000D}', '\u{0085}', '\u{2028}', '\u{2029}',
 ];
 // Decimal digits (Unicode U+0030 .. U+0039)
-const DECIMAL_DIGIT_CHARACTERS: [char; 10] = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-];
+const DECIMAL_DIGIT_CHARACTERS: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 // Unicode General Category Cc and Cf.
 // TODO: This is not actually the full list of charadcters in Cc and Cf, but
