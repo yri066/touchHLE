@@ -59,7 +59,7 @@ pub struct CondHostObject {
 pub fn pthread_cond_init(
     env: &mut Environment,
     cond: MutPtr<pthread_cond_t>,
-    attr: ConstPtr<pthread_condattr_t>,
+    _attr: ConstPtr<pthread_condattr_t>,
 ) -> i32 {
     // assert!(attr.is_null());
     let opaque = pthread_cond_t {
