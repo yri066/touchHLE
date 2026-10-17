@@ -165,6 +165,10 @@ pub const CLASSES: ClassExports = objc_classes! {
     () = msg_class![env; CATransaction setAnimationDuration:duration];
 }
 
++ (())setAnimationsEnabled:(bool)enabled {
+    log_dbg!("[UIView setAnimationsEnabled:{:?}]", enabled);
+}
+
 + (())setAnimationDelay:(NSTimeInterval)delay {
     log_dbg!("[UIView setAnimationDelay:{:?}]", delay);
     let value: id = msg_class![env; NSNumber numberWithDouble:delay];
