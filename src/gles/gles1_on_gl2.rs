@@ -287,7 +287,7 @@ const GET_PARAMS: ParamTable = ParamTable(&[
     // OES_framebuffer_object -> EXT_framebuffer_object
     (gl21::FRAMEBUFFER_BINDING_EXT, ParamType::Int, 1),
     (gl21::RENDERBUFFER_BINDING_EXT, ParamType::Int, 1),
-    (gl21::MAX_RENDERBUFFER_SIZE, ParamType::Int, 1),
+    (gl21::MAX_RENDERBUFFER_SIZE_EXT, ParamType::Int, 1),
     // EXT_texture_lod_bias
     (gl21::MAX_TEXTURE_LOD_BIAS_EXT, ParamType::Float, 1),
     // OES_matrix_palette -> ARB_matrix_palette
