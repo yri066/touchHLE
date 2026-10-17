@@ -1479,11 +1479,13 @@ fn glBindVertexArrayOES(env: &mut Environment, array: GLuint) {
 fn glGenVertexArraysOES(env: &mut Environment, n: GLsizei, arrays: MutPtr<GLuint>) {
     with_ctx_and_mem(env, |gles, mem| unsafe {
         let arrays = if arrays.is_null() {
-            std::ptr::null()
+            std::ptr::null_mut()
         } else {
             mem.ptr_at_mut(
                 arrays.cast::<u8>(),
-                (n as GuestUSize) * (std::mem::size_of::<GLuint>() as GuestUSize),
+                ((n as usize) * std::mem::size_of::<GLuint>())
+                    .try_into()
+                    .unwrap(),
             )
             .cast()
         };
@@ -1497,7 +1499,9 @@ fn glDeleteVertexArraysOES(env: &mut Environment, n: GLsizei, arrays: ConstPtr<G
         } else {
             mem.ptr_at(
                 arrays.cast::<u8>(),
-                (n as GuestUSize) * (std::mem::size_of::<GLuint>() as GuestUSize),
+                ((n as usize) * std::mem::size_of::<GLuint>())
+                    .try_into()
+                    .unwrap(),
             )
             .cast()
         };
