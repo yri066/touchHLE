@@ -2162,7 +2162,8 @@ impl GLES for GLES1OnGL2<'_> {
     }
     // OES_vertex_array_object
     unsafe fn BindVertexArrayOES(&mut self, _array: GLuint) {
-        // Stub: VAOs are an optimization, not strictly required for GLES 1.1 correctness
+        // Stub: VAOs are an optimization,
+        // not strictly required for GLES 1.1 correctness
     }
     unsafe fn GenVertexArraysOES(&mut self, _n: GLsizei, _arrays: *mut GLuint) {
         // Stub
