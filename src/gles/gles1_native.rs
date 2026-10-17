@@ -836,4 +836,17 @@ impl GLES for GLES1Native<'_> {
     unsafe fn UnmapBufferOES(&mut self, target: GLenum) -> GLboolean {
         gles11::UnmapBufferOES(target)
     }
+    // OES_vertex_array_object
+    unsafe fn BindVertexArrayOES(&mut self, _array: GLuint) {
+        // Stub
+    }
+    unsafe fn GenVertexArraysOES(&mut self, _n: GLsizei, _arrays: *mut GLuint) {
+        // Stub
+    }
+    unsafe fn DeleteVertexArraysOES(&mut self, _n: GLsizei, _arrays: *const GLuint) {
+        // Stub
+    }
+    unsafe fn IsVertexArrayOES(&mut self, _array: GLuint) -> GLboolean {
+        0 // GL_FALSE
+    }
 }
