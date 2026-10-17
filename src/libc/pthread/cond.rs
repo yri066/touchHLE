@@ -261,6 +261,17 @@ pub fn pthread_cond_destroy(env: &mut Environment, cond: MutPtr<pthread_cond_t>)
     0 // success
 }
 
+pub fn pthread_condattr_init(_env: &mut Environment, _attr: MutPtr<pthread_condattr_t>) -> i32 {
+    // Stub: condattr is not supported, 
+    // but we return success to satisfy the caller
+    0
+}
+
+pub fn pthread_condattr_destroy(_env: &mut Environment, _attr: MutPtr<pthread_condattr_t>) -> i32 {
+    // Stub
+    0
+}
+
 pub const FUNCTIONS: FunctionExports = &[
     export_c_func!(pthread_cond_init(_, _)),
     export_c_func!(pthread_cond_wait(_, _)),
@@ -268,4 +279,6 @@ pub const FUNCTIONS: FunctionExports = &[
     export_c_func!(pthread_cond_signal(_)),
     export_c_func!(pthread_cond_broadcast(_)),
     export_c_func!(pthread_cond_destroy(_)),
+    export_c_func!(pthread_condattr_init(_)),
+    export_c_func!(pthread_condattr_destroy(_)),
 ];
