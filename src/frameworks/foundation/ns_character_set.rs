@@ -136,10 +136,8 @@ pub const CLASSES: ClassExports = objc_classes! {
 
 + (id)decimalDigitCharacterSet {
     let set = HashSet::from(DECIMAL_DIGIT_CHARACTERS.map(|c| unichar::try_from(c).unwrap()));
-
     let new: id = msg![env; this alloc];
     env.objc.borrow_mut::<CharacterSetHostObject>(new).set = set;
-
     autorelease(env, new)
 }
 
