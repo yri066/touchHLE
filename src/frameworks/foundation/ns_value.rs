@@ -5,7 +5,6 @@
  */
 //! The `NSValue` class cluster, including `NSNumber`.
 
-use super::ns_string::get_static_str;
 use super::ns_string::{from_rust_ordering, from_rust_string};
 use super::{
     _nib_archive_decoder, ns_keyed_unarchiver, NSComparisonResult, NSOrderedSame, NSUInteger,
