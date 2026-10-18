@@ -53,15 +53,3 @@ pub const CLASSES: ClassExports = objc_classes! {
 
     @end
 };
-
-#[derive(Default)]
-pub struct UIBarItemHostObject {}
-
-// Implementing the HostObject trait is mandatory
-// for structures used in alloc_object.
-impl HostObject for UIBarItemHostObject {}
-
-#[derive(Default)]
-pub struct UIBarButtonItemHostObject {}
-
-impl HostObject for UIBarButtonItemHostObject {}
