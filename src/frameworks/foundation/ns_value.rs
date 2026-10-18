@@ -5,6 +5,7 @@
  */
 //! The `NSValue` class cluster, including `NSNumber`.
 
+use super::ns_string::get_static_str;
 use super::ns_string::{from_rust_ordering, from_rust_string};
 use super::{
     _nib_archive_decoder, ns_keyed_unarchiver, NSComparisonResult, NSOrderedSame, NSUInteger,
@@ -16,7 +17,7 @@ use crate::frameworks::core_foundation::cf_number::{
 use crate::frameworks::core_graphics::{CGPoint, CGRect, CGSize};
 use crate::frameworks::foundation::ns_keyed_archiver::get_value_to_encode_for_current_key;
 use crate::frameworks::foundation::NSInteger;
-use crate::mem::{ConstVoidPtr, MutVoidPtr};
+use crate::mem::{ConstPtr, ConstVoidPtr, GuestUSize, MutVoidPtr};
 use crate::objc::{
     autorelease, id, msg, msg_class, nil, objc_classes, release, retain, Class, ClassExports,
     HostObject, NSZonePtr,
@@ -501,6 +502,13 @@ pub const CLASSES: ClassExports = objc_classes! {
         return false;
     }
     msg![env; this isEqualToNumber:other]
+}
+
+- (ConstPtr<u8>)objCType {
+    // Return a pointer to the static C string “q”
+    // (encoding for long long, which is a safe
+    // default value for NSNumber)
+    ConstPtr::from_bits(b"q\0".as_ptr() as GuestUSize)
 }
 
 - (bool)isEqualToNumber:(id)other {
