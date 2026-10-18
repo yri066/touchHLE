@@ -470,6 +470,17 @@ pub const CLASSES: ClassExports = objc_classes! {
 
     utf16.len().try_into().unwrap()
 }
+- (NSUInteger)count {
+    msg![env; this length]
+}
+- (id)allValues {
+    nil
+}
+- (())removeAllObjects {
+    // Stub: some code mistakenly calls `removeAllObjects`
+    // on NSString instead of a mutable collection.
+    // Doing nothing is the safest fallback.
+}
 - (u16)characterAtIndex:(NSUInteger)index {
     let host_object = env.objc.borrow_mut::<StringHostObject>(this);
 
