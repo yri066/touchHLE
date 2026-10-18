@@ -21,7 +21,13 @@ fn sched_get_priority_min(_env: &mut Environment, _policy: i32) -> i32 {
     0
 }
 
+fn sched_get_priority_max(_env: &mut Environment, _policy: i32) -> i32 {
+    // Stub: return a default maximum priority
+    0
+}
+
 pub const FUNCTIONS: FunctionExports = &[
     export_c_func!(sched_yield()),
     export_c_func!(sched_get_priority_min(_)),
+    export_c_func!(sched_get_priority_max(_)),
 ];
