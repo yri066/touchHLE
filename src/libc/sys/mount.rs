@@ -85,8 +85,9 @@ pub fn statfs_inner(env: &mut Environment, path: ConstPtr<u8>) -> Result<statfs,
     };
 
     // TODO: Handle additional errors
-    // We skip the existence check to be more permissive, as games often query "/"
-    // or other system paths that might not exist in our virtual FS.
+    // We skip the existence check to be more permissive,
+    // as games often query "/" or other system paths
+    // that might not exist in our virtual FS.
 
     Ok(fake_statfs())
 }

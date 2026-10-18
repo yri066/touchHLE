@@ -1674,7 +1674,8 @@ pub const CLASSES: ClassExports = objc_classes! {
 - (())insertString:(id)a_string atIndex:(NSUInteger)loc {
     assert_ne!(a_string, nil);
 
-    // We obtain the current string as UTF‑16 and immediately release the borrowing.
+    // We obtain the current string as UTF‑16 and immediately
+    // release the borrowing.
     let current_utf16 = {
         let host = env.objc.borrow_mut::<StringHostObject>(this);
         let (s, _did_convert) = host.convert_to_utf16_inplace();

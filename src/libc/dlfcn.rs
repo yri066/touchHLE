@@ -42,7 +42,8 @@ fn dlsym(env: &mut Environment, handle: MutVoidPtr, symbol: ConstPtr<u8>) -> Mut
     // where appropriate!
 
     // Return NULL if the symbol is not found, instead of panicking.
-    // This allows the guest application to gracefully handle missing optional functions.
+    // This allows the guest application to gracefully handle
+    // missing optional functions.
     match env
         .dyld
         .create_proc_address(&mut env.mem, &mut env.cpu, &symbol)
