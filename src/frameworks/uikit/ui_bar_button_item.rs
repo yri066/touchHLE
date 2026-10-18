@@ -5,52 +5,72 @@
  */
 //! The `UIBarButtonItem` class.
 
-use crate::objc::{id, msg_class, objc_classes, ClassExports, HostObject, NSZonePtr, SEL};
+use crate::objc::{id, nil, ClassExports, SEL};
 
-pub struct UIBarButtonItemHostObject;
-impl HostObject for UIBarButtonItemHostObject {}
+pub const CLASSES: ClassExports = crate::objc::objc_classes! {
 
-pub const CLASSES: ClassExports = objc_classes! {
-    (env, this, _cmd);
+(env, this, _cmd);
 
-    @implementation UIBarButtonItem:NSObject
+@implementation UIBarItem : NSObject
 
-    + (id)allocWithZone:(NSZonePtr)_zone {
-        let _class = env.objc.get_known_class("_touchHLE_UIBarButtonItem_Internal", &mut env.mem);
-        msg_class![env; _class allocWithZone:_zone]
-    }
++ (id)alloc {
+    let host_object = Box::<UIBarItemHostObject>::default();
+    env.objc.alloc_object(this, host_object, &mut env.mem)
+}
 
-    @end
+- (id)init {
+    this
+}
 
-    @implementation _touchHLE_UIBarButtonItem_Internal:NSObject
+- (())dealloc {
+    env.objc.dealloc_object(this, &mut env.mem)
+}
 
-    + (id)allocWithZone:(NSZonePtr)_zone {
-        env.objc.alloc_object(this, Box::new(UIBarButtonItemHostObject), &mut env.mem)
-    }
+@end
 
-    - (id)init {
-        this
-    }
+@implementation UIBarButtonItem : UIBarItem
 
-    - (id)initWithTitle:(id)_title
-    style:(i32)_style
-    target:(id)_target
-    action:(SEL)_action {
-        this
-    }
++ (id)alloc {
+    let host_object = Box::<UIBarButtonItemHostObject>::default();
+    env.objc.alloc_object(this, host_object, &mut env.mem)
+}
 
-    - (id)initWithImage:(id)_image
-    style:(i32)_style
-    target:(id)_target
-    action:(SEL)_action {
-        this
-    }
+- (id)init {
+    this
+}
 
-    - (id)initWithBarButtonSystemItem:(i32)_systemItem
-    target:(id)_target
-    action:(SEL)_action {
-        this
-    }
+- (id)initWithTitle:(id)title style:(i32)style target:(id)target action:(SEL)action {
+    this
+}
 
-    @end
+- (id)initWithImage:(id)image style:(i32)style target:(id)target action:(SEL)action {
+    this
+}
+
+- (id)initWithBarButtonSystemItem:(i32)systemItem target:(id)target action:(SEL)action {
+    this
+}
+
+- (id)initWithCustomView:(id)customView {
+    this
+}
+
+- (())dealloc {
+    env.objc.dealloc_object(this, &mut env.mem)
+}
+
+@end
+
 };
+
+#[derive(Default)]
+struct UIBarItemHostObject {
+    // TODO: add fields here if the application
+    // attempts to read/write them
+}
+
+#[derive(Default)]
+struct UIBarButtonItemHostObject {
+    // TODO: add fields here if the application
+    // attempts to read/write them
+}
