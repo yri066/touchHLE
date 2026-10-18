@@ -8,7 +8,7 @@ use crate::abi::DotDotDot;
 use crate::dyld::FunctionExports;
 use crate::environment::Environment;
 use crate::export_c_func;
-use crate::libc::errno::{set_errno, EINVAL, ENOTSUP};
+use crate::libc::errno::{set_errno, EINVAL, ENOMEM, ENOTSUP};
 use crate::libc::posix_io;
 use crate::libc::posix_io::{off_t, FileDescriptor, SEEK_SET};
 use crate::mem::VMAllocError;
@@ -52,15 +52,37 @@ fn mmap(
 
     assert_eq!(offset, 0);
     let ptr = if addr.is_null() {
-        env.mem.vm_alloc(None, len).unwrap()
+        match env.mem.vm_alloc(None, len) {
+            Ok(ptr) => ptr,
+            Err(VMAllocError::NoSpace) => {
+                log!("Warning: mmap failed with NoSpace (len: {})", len);
+                set_errno(env, ENOMEM);
+                return MutVoidPtr::from_bits(0);
+            }
+            Err(e) => panic!("mmap vm_alloc failed: {:?}", e),
+        }
     } else {
         match env.mem.vm_alloc(Some(addr.to_bits()), len) {
             Err(VMAllocError::AddressUnavailable) if flags & MAP_FIXED == 0 => {
-                let ptr = env.mem.vm_alloc(None, len).unwrap();
-                log!("Warning: mmap could not allocate at hint {addr:?}, allocated at {ptr:?}",);
-                ptr
+                match env.mem.vm_alloc(None, len) {
+                    Ok(ptr) => {
+                        log!("Warning: mmap could not allocate at hint {addr:?}, allocated at {ptr:?}",);
+                        ptr
+                    }
+                    Err(VMAllocError::NoSpace) => {
+                        log!("Warning: mmap failed with NoSpace (len: {})", len);
+                        set_errno(env, ENOMEM);
+                        return MutVoidPtr::from_bits(0);
+                    }
+                    Err(e) => panic!("mmap vm_alloc failed: {:?}", e),
+                }
             }
-            result => result.unwrap(),
+            Ok(ptr) => ptr,
+            Err(e) => {
+                log!("Warning: mmap vm_alloc failed: {:?}", e);
+                set_errno(env, ENOMEM);
+                return MutVoidPtr::from_bits(0);
+            }
         }
     };
 
