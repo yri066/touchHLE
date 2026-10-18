@@ -307,7 +307,9 @@ pub fn calendar_date_to_timestamp(tm: tm) -> time_t {
         seconds -= days_before_year * 86400;
     }
 
-    seconds.try_into().unwrap()
+    // If an overflow occurs (for example, due to garbage data in tm),
+    // we return -1, which is the standard error code for mktime.
+    seconds.try_into().unwrap_or(-1)
 }
 
 #[cfg(test)]
