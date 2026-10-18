@@ -6,7 +6,6 @@
 //! `sys/mount.h`, file system statistics
 
 use crate::dyld::{export_c_func, FunctionExports};
-use crate::fs::GuestPath;
 use crate::libc::dirent::MAXPATHLEN;
 use crate::libc::errno::{set_errno, EBADF, ENOENT};
 use crate::libc::posix_io::stat::uid_t;
