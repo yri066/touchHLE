@@ -64,7 +64,7 @@ pub const CLASSES: ClassExports = objc_classes! {
     startImmediately:(bool)start_immediately {
     if request == nil {
         log!("Warning: [(NSURLConnection *){:?} initWithRequest:nil delegate:{:?}]", this, delegate);
-        // If the request is nil, return nil, 
+        // If the request is nil, return nil,
         // but do not release the object to avoid double release.
         release(env, this);
         return nil;
