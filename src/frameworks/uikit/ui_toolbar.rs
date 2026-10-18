@@ -6,10 +6,8 @@
 
 //! The `UIToolbar` class stub.
 
-use crate::objc::{id, msg_class, objc_classes, ClassExports, HostObject, NSZonePtr};
-
-pub struct UIToolbarHostObject;
-impl HostObject for UIToolbarHostObject {}
+use super::ui_view::UIViewHostObject;
+use crate::objc::{id, msg_class, objc_classes, ClassExports, NSZonePtr};
 
 pub const CLASSES: ClassExports = objc_classes! {
     (env, this, _cmd);
@@ -25,7 +23,9 @@ pub const CLASSES: ClassExports = objc_classes! {
     @implementation _touchHLE_UIToolbar_Internal:UIView
 
     + (id)allocWithZone:(NSZonePtr)_zone {
-        env.objc.alloc_object(this, Box::new(UIToolbarHostObject), &mut env.mem)
+        // We use UIViewHostObject because UIToolbar inherits from UIView
+        // and UIView methods expect to find this specific type of host object.
+        env.objc.alloc_object(this, Box::<UIViewHostObject>::default(), &mut env.mem)
     }
 
     - (id)init {
