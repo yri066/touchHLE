@@ -1659,6 +1659,38 @@ pub const CLASSES: ClassExports = objc_classes! {
     autorelease(env, res)
 }
 
+
+- (())insertString:(id)a_string atIndex:(NSUInteger)loc {
+    assert_ne!(a_string, nil);
+
+    // We obtain the current string as UTF‑16 and immediately release the borrowing.
+    let current_utf16 = {
+        let host = env.objc.borrow_mut::<StringHostObject>(this);
+        let (s, _did_convert) = host.convert_to_utf16_inplace();
+        s.clone()
+    };
+
+    // We receive the inserted string as UTF-16.
+    let insert_utf16 = {
+        let host = env.objc.borrow_mut::<StringHostObject>(a_string);
+        let (s, _did_convert) = host.convert_to_utf16_inplace();
+        s.clone()
+    };
+
+    // We are performing the insertion.
+    let loc_usize: usize = loc.try_into().unwrap_or(0);
+    let loc_usize = loc_usize.min(current_utf16.len());
+
+    let mut new_utf16 = Vec::with_capacity(current_utf16.len() + insert_utf16.len());
+    new_utf16.extend_from_slice(&current_utf16[..loc_usize]);
+    new_utf16.extend_from_slice(&insert_utf16);
+    new_utf16.extend_from_slice(&current_utf16[loc_usize..]);
+
+    // We save the result back to the object.
+    *env.objc.borrow_mut::<StringHostObject>(this) = StringHostObject::Utf16(new_utf16);
+}
+
+
 @end
 
 };
