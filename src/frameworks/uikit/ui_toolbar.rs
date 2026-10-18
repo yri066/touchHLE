@@ -32,5 +32,13 @@ pub const CLASSES: ClassExports = objc_classes! {
         this
     }
 
+    - (())setItems:(id)_items {
+        // Stub: ignore the installation of elements
+    }
+
+    - (())setItems:(id)_items animated:(bool)_animated {
+        // Stub: ignore the installation of elements with animation
+    }
+
     @end
 };
