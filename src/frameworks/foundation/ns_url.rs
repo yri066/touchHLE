@@ -97,11 +97,21 @@ pub const CLASSES: ClassExports = objc_classes! {
     if url == nil {
         return nil;
     }
-
-    // FIXME: this should parse the URL
-    assert!(!to_rust_string(env, url).starts_with("file:")); // TODO
-    let url: id = msg![env; url copy];
-    *env.objc.borrow_mut(this) = NSURLHostObject::OtherURL { ns_string: url };
+    let url_str = to_rust_string(env, url);
+    if url_str.starts_with("file:") {
+        // Strip "file://" or "file:///" prefix
+        let path_str = url_str.strip_prefix("file://").unwrap_or(url_str.as_ref());
+        let path = from_rust_string(env, path_str.to_string());
+        let path = msg![env; path stringByExpandingTildeInPath];
+        let path: id = msg![env; path copy];
+        *env.objc.borrow_mut(this) = NSURLHostObject::FileURL {
+            ns_string: path,
+            working_directory: env.fs.working_directory().into(),
+        };
+    } else {
+        let url: id = msg![env; url copy];
+        *env.objc.borrow_mut(this) = NSURLHostObject::OtherURL { ns_string: url };
+    }
     this
 }
 
@@ -138,6 +148,10 @@ pub const CLASSES: ClassExports = objc_classes! {
             ns_string
         },
     }
+}
+
+- (id)query {
+    nil
 }
 
 - (id)absoluteString {
