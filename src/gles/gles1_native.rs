@@ -849,4 +849,13 @@ impl GLES for GLES1Native<'_> {
     unsafe fn IsVertexArrayOES(&mut self, _array: GLuint) -> GLboolean {
         0 // GL_FALSE
     }
+    // EXT_discard_framebuffer
+    unsafe fn DiscardFramebufferEXT(
+        &mut self,
+        _target: GLenum,
+        _numAttachments: GLsizei,
+        _attachments: *const GLenum,
+    ) {
+        // Stub
+    }
 }

@@ -1511,6 +1511,25 @@ fn glDeleteVertexArraysOES(env: &mut Environment, n: GLsizei, arrays: ConstPtr<G
 fn glIsVertexArrayOES(env: &mut Environment, array: GLuint) -> GLboolean {
     with_ctx_and_mem(env, |gles, _mem| unsafe { gles.IsVertexArrayOES(array) })
 }
+fn glDiscardFramebufferEXT(
+    env: &mut Environment,
+    target: GLenum,
+    numAttachments: GLsizei,
+    attachments: ConstPtr<GLenum>,
+) {
+    with_ctx_and_mem(env, |gles, mem| unsafe {
+        let attachments = if attachments.is_null() || numAttachments == 0 {
+            std::ptr::null()
+        } else {
+            mem.ptr_at(
+                attachments.cast::<u8>(),
+                (numAttachments as u32) * std::mem::size_of::<GLenum>() as u32,
+            )
+            .cast()
+        };
+        gles.DiscardFramebufferEXT(target, numAttachments, attachments);
+    })
+}
 
 pub const FUNCTIONS: FunctionExports = &[
     // Generic state manipulation
@@ -1680,6 +1699,8 @@ pub const FUNCTIONS: FunctionExports = &[
     export_c_func!(glGenVertexArraysOES(_, _)),
     export_c_func!(glDeleteVertexArraysOES(_, _)),
     export_c_func!(glIsVertexArrayOES(_)),
+    // EXT_discard_framebuffer
+    export_c_func!(glDiscardFramebufferEXT(_, _, _)),
 ];
 
 fn _get_currently_bound_buffer_object_name(env: &mut Environment, target: GLenum) -> GLuint {

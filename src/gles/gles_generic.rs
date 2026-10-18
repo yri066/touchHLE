@@ -445,4 +445,11 @@ pub trait GLES {
     unsafe fn GenVertexArraysOES(&mut self, _n: GLsizei, _arrays: *mut GLuint);
     unsafe fn DeleteVertexArraysOES(&mut self, _n: GLsizei, _arrays: *const GLuint);
     unsafe fn IsVertexArrayOES(&mut self, _array: GLuint) -> GLboolean;
+    // EXT_discard_framebuffer
+    unsafe fn DiscardFramebufferEXT(
+        &mut self,
+        target: GLenum,
+        numAttachments: GLsizei,
+        attachments: *const GLenum,
+    );
 }
