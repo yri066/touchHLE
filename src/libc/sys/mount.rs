@@ -76,17 +76,18 @@ fn fake_statfs() -> statfs {
 
 /// Internal helper for `statfs`, not a part of the API.
 pub fn statfs_inner(env: &mut Environment, path: ConstPtr<u8>) -> Result<statfs, i32> {
-    // FIXME does directory matter?
-    assert!(env
-        .mem
-        .cstr_at_utf8(path)
-        .is_ok_and(|path| path.starts_with(env.fs.home_directory().join("Documents").as_str())));
+    // Relax the strict Documents directory check, as games
+    // may query various paths (e.g., "/").
+    // Returning a fake statfs for any valid UTF-8 path
+    // is generally safe and prevents crashes.
+    let _path_str = match env.mem.cstr_at_utf8(path) {
+        Ok(p) => p,
+        Err(_) => return Err(ENOENT),
+    };
 
     // TODO: Handle additional errors
-    let path = env.mem.cstr_at_utf8(path).unwrap();
-    if !env.fs.exists(GuestPath::new(path)) {
-        return Err(ENOENT);
-    }
+    // We skip the existence check to be more permissive, as games often query "/"
+    // or other system paths that might not exist in our virtual FS.
 
     Ok(fake_statfs())
 }
