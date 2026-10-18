@@ -16,8 +16,8 @@ pub const CLASSES: ClassExports = objc_classes! {
     @implementation UIBarButtonItem:NSObject
 
     + (id)allocWithZone:(NSZonePtr)_zone {
-        let class = env.objc.get_known_class("_touchHLE_UIBarButtonItem_Internal", &mut env.mem);
-        msg_class![env; class allocWithZone:_zone]
+        let _class = env.objc.get_known_class("_touchHLE_UIBarButtonItem_Internal", &mut env.mem);
+        msg_class![env; _class allocWithZone:_zone]
     }
 
     @end
@@ -32,23 +32,23 @@ pub const CLASSES: ClassExports = objc_classes! {
         this
     }
 
-    - (id)initWithTitle:(id)title
-    style:(i32)style
-    target:(id)target
-    action:(SEL)action {
+    - (id)initWithTitle:(id)_title
+    style:(i32)_style
+    target:(id)_target
+    action:(SEL)_action {
         this
     }
 
-    - (id)initWithImage:(id)image
-    style:(i32)style
-    target:(id)target
-    action:(SEL)action {
+    - (id)initWithImage:(id)_image
+    style:(i32)_style
+    target:(id)_target
+    action:(SEL)_action {
         this
     }
 
-    - (id)initWithBarButtonSystemItem:(i32)systemItem
-    target:(id)target
-    action:(SEL)action {
+    - (id)initWithBarButtonSystemItem:(i32)_systemItem
+    target:(id)_target
+    action:(SEL)_action {
         this
     }
 
