@@ -51,5 +51,9 @@ pub const CLASSES: ClassExports = objc_classes! {
         this
     }
 
+    - (id)initWithCustomView:(id)_customView {
+        this
+    }
+
     @end
 };
