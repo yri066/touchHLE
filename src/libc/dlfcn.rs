@@ -40,11 +40,22 @@ fn dlsym(env: &mut Environment, handle: MutVoidPtr, symbol: ConstPtr<u8>) -> Mut
     // no symbol found, since it most likely indicates a missing host function.
     // TODO: Symbol lookup should be scoped to the specific library requested,
     // where appropriate!
-    let addr = env
+
+    // Return NULL if the symbol is not found, instead of panicking.
+    // This allows the guest application to gracefully handle missing optional functions.
+    match env
         .dyld
         .create_proc_address(&mut env.mem, &mut env.cpu, &symbol)
-        .unwrap_or_else(|_| panic!("dlsym() for unimplemented function {symbol}"));
-    Ptr::from_bits(addr.addr_with_thumb_bit())
+    {
+        Ok(addr) => Ptr::from_bits(addr.addr_with_thumb_bit()),
+        Err(_) => {
+            log!(
+                "Warning: dlsym() for unimplemented function {}, returning NULL",
+                symbol
+            );
+            Ptr::null()
+        }
+    }
 }
 
 fn dlclose(env: &mut Environment, handle: MutVoidPtr) -> i32 {
