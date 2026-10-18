@@ -5,46 +5,50 @@
  */
 //! The `UIBarButtonItem` class.
 
-use crate::objc::{id, objc_classes, ClassExports, NSZonePtr};
-// Use super::ui_view::UIView; if UIBarItem not exist
-use super::ui_responder::UIResponder;
+use crate::objc::selectors::SEL;
+use crate::objc::{id, msg, msg_class, objc_classes, ClassExports, NSZonePtr};
 
 pub const CLASSES: ClassExports = objc_classes! {
     (env, this, _cmd);
 
-    // UIBarItem is absent; UIResponder is used.
-    @implementation UIBarButtonItem:UIResponder
+    @implementation UIBarButtonItem:NSObject
 
     + (id)allocWithZone:(NSZonePtr)_zone {
-        let host_object = Box::new(UIBarButtonItemHostObject::default());
-        env.objc.alloc_object(this, host_object, &mut env.mem)
+        let class = env.objc.get_known_class("_touchHLE_UIBarButtonItem_Internal", &mut env.mem);
+        msg_class![env; class allocWithZone:_zone]
     }
 
-    // Stub for initWithImage:style:target:action:
-    - (id)initWithImage:(id)image
-                style:(i32)style
-             target:(id)target
-             action:(SEL)action {
-        log_dbg!("[UIBarButtonItem initWithImage:{:?} style:{} target:{:?} action:{}]", image, style, target, action.as_str(&env.mem));
+    @end
+
+    @implementation _touchHLE_UIBarButtonItem_Internal:NSObject
+
+    + (id)allocWithZone:(NSZonePtr)_zone {
+        env.objc.alloc_object(this, Box::new(()), &mut env.mem)
+    }
+
+    - (id)init {
         this
     }
 
-    // Stub for initWithTitle:style:target:action:
     - (id)initWithTitle:(id)title
-                style:(i32)style
-             target:(id)target
-             action:(SEL)action {
-        log_dbg!("[UIBarButtonItem initWithTitle:{:?} style:{} target:{:?} action:{}]", title, style, target, action.as_str(&env.mem));
+    style:(i32)style
+    target:(id)target
+    action:(SEL)action {
+        this
+    }
+
+    - (id)initWithImage:(id)image
+    style:(i32)style
+    target:(id)target
+    action:(SEL)action {
+        this
+    }
+
+    - (id)initWithBarButtonSystemItem:(i32)systemItem
+    target:(id)target
+    action:(SEL)action {
         this
     }
 
     @end
 };
-
-#[derive(Default)]
-struct UIBarButtonItemHostObject {
-    // Here you can add fields for
-    // storing the button state in the future
-}
-
-impl crate::objc::HostObject for UIBarButtonItemHostObject {}
