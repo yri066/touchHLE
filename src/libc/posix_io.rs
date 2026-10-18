@@ -261,13 +261,7 @@ pub fn read(
     }
 
     let Some(file) = env.libc_state.posix_io.file_for_fd(fd) else {
-        log!(
-            "Warning: read({:?}, {:?}, {:#x}) called with unknown fd, returning -1",
-            fd,
-            buffer,
-            size,
-        );
-        // TODO: set errno
+        set_errno(env, crate::libc::errno::EBADF);
         return -1;
     };
 
@@ -395,8 +389,10 @@ pub fn write(
     // TODO: handle errno properly
     set_errno(env, 0);
 
-    // TODO: error handling for unknown fd?
-    let file = env.libc_state.posix_io.file_for_fd(fd).unwrap();
+    let Some(file) = env.libc_state.posix_io.file_for_fd(fd) else {
+        set_errno(env, crate::libc::errno::EBADF);
+        return -1;
+    };
 
     if buffer.is_null() {
         assert_eq!(size, 0);
