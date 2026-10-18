@@ -60,18 +60,30 @@ pub const CLASSES: ClassExports = objc_classes! {
 }
 
 - (id)initWithRequest:(id)request // NSURLRequest *
-             delegate:(id)delegate
-     startImmediately:(bool)start_immediately {
+    delegate:(id)delegate
+    startImmediately:(bool)start_immediately {
+    if request == nil {
+        log!("Warning: [(NSURLConnection *){:?} initWithRequest:nil delegate:{:?}]", this, delegate);
+        // If the request is nil, return nil, 
+        // but do not release the object to avoid double release.
+        release(env, this);
+        return nil;
+    }
+
     log!(
-        "TODO: [(NSURLConnection *){:?} initWithRequest:{:?} ('{}') delegate:{:?} startImmediately:{}] -> nil",
+        "TODO: [(NSURLConnection *){:?} initWithRequest:{:?} ('{}') delegate:{:?} startImmediately:{}]",
         this,
         request,
         url_string_from_request(env, request),
         delegate,
         start_immediately,
     );
-    release(env, this);
-    nil
+    this
+}
+
+- (())start {
+    // Stub: do nothing, as we don't actually load network resources.
+    log!("TODO: [(NSURLConnection *){:?} start]", this);
 }
 
 @end
@@ -83,7 +95,11 @@ fn url_string_from_request(env: &mut Environment, request: id) -> Cow<'static, s
         Cow::from("(null)")
     } else {
         let url = msg![env; request URL];
-        let ns_string = msg![env; url absoluteString];
-        ns_string::to_rust_string(env, ns_string)
+        if url == nil {
+            Cow::from("(null URL)")
+        } else {
+            let ns_string = msg![env; url absoluteString];
+            ns_string::to_rust_string(env, ns_string)
+        }
     }
 }
