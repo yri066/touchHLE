@@ -5,8 +5,10 @@
  */
 //! The `UIBarButtonItem` class.
 
-use crate::objc::selectors::SEL;
-use crate::objc::{id, msg, msg_class, objc_classes, ClassExports, NSZonePtr};
+use crate::objc::{id, msg_class, objc_classes, ClassExports, HostObject, NSZonePtr, SEL};
+
+pub struct UIBarButtonItemHostObject;
+impl HostObject for UIBarButtonItemHostObject {}
 
 pub const CLASSES: ClassExports = objc_classes! {
     (env, this, _cmd);
@@ -23,7 +25,7 @@ pub const CLASSES: ClassExports = objc_classes! {
     @implementation _touchHLE_UIBarButtonItem_Internal:NSObject
 
     + (id)allocWithZone:(NSZonePtr)_zone {
-        env.objc.alloc_object(this, Box::new(()), &mut env.mem)
+        env.objc.alloc_object(this, Box::new(UIBarButtonItemHostObject), &mut env.mem)
     }
 
     - (id)init {
