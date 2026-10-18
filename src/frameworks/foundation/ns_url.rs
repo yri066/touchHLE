@@ -151,6 +151,12 @@ pub const CLASSES: ClassExports = objc_classes! {
 }
 
 - (id)query {
+    // For file URLs, there is no query string; return nil.
+    nil
+}
+
+- (id)fragment {
+    // For file URLs, the fragment is missing; return nil.
     nil
 }
 
